@@ -149,7 +149,7 @@ describe("Restaurant and Menu Models Association", () => {
     let menu1 = await Menu.create(seedMenu[0]);
     let menu2 = await Menu.create(seedMenu[1]);
     let menu3 = await Menu.create(seedMenu[2]);
-    // create some associations - put musicians in bands
+    // create some associations - put menus in restaurants
     await restaurant.addMenu(menu1);
     await restaurant.addMenu(menu2);
     await restaurant.addMenu(menu3);
@@ -180,10 +180,9 @@ describe("Menu and Item Models Association", () => {
     //Populate the DB with a Menu and some Items
     let menu1 = await Menu.create(seedMenu[0]);
     let menu2 = await Menu.create(seedMenu[1]);
-    let menu3 = await Menu.create(seedMenu[2]);
+
     let item1 = await Item.create(seedItem[0]);
     let item2 = await Item.create(seedItem[1]);
-    let item3 = await Item.create(seedItem[2]);
 
     // create some associations - put items in a menu
     await menu1.addItems([item1, item2]);
@@ -206,12 +205,75 @@ describe("Menu and Item Models Association", () => {
     const item1Menus = await item1.getMenus();
     expect(item1Menus.length).toBe(2);
     expect(item1Menus[0] instanceof Menu).toBeTruthy;
-    console.log(item1Menus);
+    // console.log(item1Menus);
     expect(item1Menus[0]).toHaveProperty("title", "Breakfast");
 
     const item2Menus = await item2.getMenus();
     expect(item2Menus.length).toBe(2);
     expect(item2Menus[0] instanceof Menu).toBeTruthy;
     expect(item2Menus[1]).toHaveProperty("title", "Lunch");
+  });
+});
+
+//PART 4
+
+describe("Eager load", () => {
+  /**
+   * Runs the code prior to all tests
+   */
+  beforeAll(async () => {
+    // the 'sync' method will create tables based on the model class
+    // by setting 'force:true' the tables are recreated each time the
+    // test suite is run
+    await sequelize.sync({ force: true });
+  });
+
+  test("Items can be eager loaded with Restaurants", async () => {
+    // create Restaurants, Menus and Items
+    //Populate the DB with a Menu and some Restaurants
+    let restaurant1 = await Restaurant.create(seedRestaurant[0]);
+    let restaurant2 = await Restaurant.create(seedRestaurant[1]);
+    let restaurant3 = await Restaurant.create(seedRestaurant[2]);
+
+    let menu1 = await Menu.create(seedMenu[0]);
+    let menu2 = await Menu.create(seedMenu[1]);
+    let menu3 = await Menu.create(seedMenu[2]);
+
+    let item1 = await Item.create(seedItem[0]);
+    let item2 = await Item.create(seedItem[1]);
+    let item3 = await Item.create(seedItem[2]);
+
+    // create some associations - put menus in restaurants
+    await restaurant1.addMenu(menu1);
+    await restaurant2.addMenu(menu2);
+    await restaurant2.addMenu(menu3);
+
+    // create some associations - put items in a menu
+    await menu1.addItems([item1, item2]);
+    await menu2.addItems([item1, item2]);
+    // create some associations - have the same item in different menus
+    await item1.addMenus([menu1, menu2]);
+    await item2.addMenus([menu1, menu2]);
+
+    //test eager loading all menus in Restaurants
+
+    const restaurants = await Restaurant.findAll({ include: Menu });
+    // console.log(restaurants);
+
+    expect(restaurants[0].Menus.length).toBe(1);
+    expect(restaurants[1].Menus.length).toBe(2);
+
+    // test eager loading all menus that have an item
+
+    const fetchedItem = await Item.findOne({ include: Menu });
+    // console.log(fetchedItem.Menus);
+    expect(fetchedItem.Menus.length).toBe(2);
+
+    //test eager all items and all Menus
+
+    const fetchedMenu = await Menu.findAll({ include: Item });
+    // console.log(fetchedMenu[0].Items);
+    expect(fetchedMenu[0].Items.length).toBe(2);
+    expect(fetchedMenu[1].Items.length).toBe(2);
   });
 });
