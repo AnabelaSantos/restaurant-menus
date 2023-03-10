@@ -1,6 +1,6 @@
 const { sequelize } = require("./db");
-const { Restaurant, Menu } = require("./models/index");
-const { seedRestaurant, seedMenu } = require("./seedData");
+const { Restaurant, Menu, Item } = require("./models/index");
+const { seedRestaurant, seedMenu, seedItem } = require("./seedData");
 
 describe("Restaurant and Menu Models", () => {
   /**
@@ -59,10 +59,36 @@ describe("Restaurant and Menu Models", () => {
     expect(menu3).toHaveProperty("title", "Dinner");
   });
 
+  test("can create an Item", async () => {
+    // TODO - write test
+    let item = await Item.create({
+      name: "Bitoque",
+      image: "someimage.jpg",
+      price: 20,
+      vegetarian: false,
+    });
+    expect(typeof Item).toBe("function");
+    expect(item).toHaveProperty("name", "Bitoque");
+    expect(item).toHaveProperty("image", "someimage.jpg");
+    expect(item).toHaveProperty("price", 20);
+    expect(item).toHaveProperty("vegetarian", false);
+  });
+
+  test("can create an Item from the seed file", async () => {
+    let restaurant1 = await Restaurant.create(seedRestaurant[0]);
+    let restaurant2 = await Restaurant.create(seedRestaurant[1]);
+    let restaurant3 = await Restaurant.create(seedRestaurant[2]);
+
+    expect(typeof Restaurant).toBe("function");
+    expect(restaurant1).toHaveProperty("name", "AppleBees");
+    expect(restaurant2).toHaveProperty("location", "Dallas");
+    expect(restaurant3).toHaveProperty("cuisine", "Indian");
+  });
+
   test("can find Restaurants", async () => {
     // TODO - write test
     const restaurants = await Restaurant.findAll();
-    expect(restaurants.length).toBe(4);
+    expect(restaurants.length).toBe(7);
     expect(restaurants[0] instanceof Restaurant).toBeTruthy;
     console.log(restaurants.length);
     expect(restaurants[0].location).toBe("Vauxhall");
@@ -84,7 +110,7 @@ describe("Restaurant and Menu Models", () => {
       where: { cuisine: "FastFood" },
     });
     const restaurants = await Restaurant.findAll();
-    expect(restaurants.length).toBe(3);
+    expect(restaurants.length).toBe(5);
     // console.log(restaurants);
   });
 
@@ -97,5 +123,41 @@ describe("Restaurant and Menu Models", () => {
     const menus = await Menu.findAll();
     expect(menus.length).toBe(3);
     console.log(menus);
+  });
+});
+
+//Part 2
+describe("Restaurant and Menu Models Association", () => {
+  /**
+   * Runs the code prior to all tests
+   */
+  beforeAll(async () => {
+    // the 'sync' method will create tables based on the model class
+    // by setting 'force:true' the tables are recreated each time the
+    // test suite is run
+    await sequelize.sync({ force: true });
+  });
+
+  test("If a Restaurant can have many Menus", async () => {
+    //Create Restaurant and Menus
+    let restaurant = await Restaurant.create({
+      name: "O Bitoque",
+      location: "Vauxhall",
+      cuisine: "Portuguese",
+      rating: 10,
+    });
+    let menu1 = await Menu.create(seedMenu[0]);
+    let menu2 = await Menu.create(seedMenu[1]);
+    let menu3 = await Menu.create(seedMenu[2]);
+    // create some associations - put musicians in bands
+    await restaurant.addMenu(menu1);
+    await restaurant.addMenu(menu2);
+    await restaurant.addMenu(menu3);
+
+    // test the association
+    const restaurantMenus = await restaurant.getMenus();
+    expect(restaurantMenus.length).toBe(3);
+    expect(restaurantMenus[0] instanceof Menu).toBeTruthy;
+    expect(restaurantMenus[0].title).toBe("Breakfast");
   });
 });
