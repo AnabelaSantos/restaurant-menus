@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1678477311519" clover="3.2.0">
-  <project timestamp="1678477311519" name="All files">
-    <metrics statements="30" coveredstatements="30" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0" elements="30" coveredelements="30" complexity="0" loc="30" ncloc="30" packages="2" files="6" classes="6"/>
+<coverage generated="1678479313190" clover="3.2.0">
+  <project timestamp="1678479313191" name="All files">
+    <metrics statements="32" coveredstatements="32" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0" elements="32" coveredelements="32" complexity="0" loc="32" ncloc="32" packages="2" files="6" classes="6"/>
     <package name="restaurant-menus">
       <metrics statements="8" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <file name="db.js" path="C:\Users\anabe\restaurant-menus\db.js">
@@ -20,7 +20,7 @@
       </file>
     </package>
     <package name="restaurant-menus.models">
-      <metrics statements="22" coveredstatements="22" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <metrics statements="24" coveredstatements="24" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <file name="Item.js" path="C:\Users\anabe\restaurant-menus\models\Item.js">
         <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
@@ -46,7 +46,7 @@
         <line num="14" count="1" type="stmt"/>
       </file>
       <file name="index.js" path="C:\Users\anabe\restaurant-menus\models\index.js">
-        <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -54,6 +54,8 @@
         <line num="6" count="1" type="stmt"/>
         <line num="7" count="1" type="stmt"/>
         <line num="9" count="1" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="12" count="1" type="stmt"/>
       </file>
     </package>
   </project>
