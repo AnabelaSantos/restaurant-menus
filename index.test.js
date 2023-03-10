@@ -19,11 +19,13 @@ describe("Restaurant and Menu Models", () => {
       name: "O Bitoque",
       location: "Vauxhall",
       cuisine: "Portuguese",
+      rating: 10,
     });
     expect(typeof Restaurant).toBe("function");
     expect(restaurant).toHaveProperty("name", "O Bitoque");
     expect(restaurant).toHaveProperty("location", "Vauxhall");
     expect(restaurant).toHaveProperty("cuisine", "Portuguese");
+    expect(restaurant).toHaveProperty("rating", 10);
   });
 
   test("can create a Restaurant from the seed file", async () => {
